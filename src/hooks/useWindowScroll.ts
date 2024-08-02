@@ -15,16 +15,16 @@ type ReturnWindowScroll = [
 ]
 
 export const useWindowScroll = (): ReturnWindowScroll => {
-	const [scroll, setScroll] = useState({x: window.pageXOffset || document.documentElement.scrollLeft, y: window.pageYOffset || document.documentElement.scrollTop});
+	const [scroll, setScroll] = useState( window ? {x: window.pageXOffset, y: window.pageYOffset} : {x: document.documentElement.scrollLeft, y: document.documentElement.scrollTop});
 
-	useWindowEvent('scroll', ()=>{setScroll({x: window.pageXOffset || document.documentElement.scrollLeft, y: window.pageYOffset || document.documentElement.scrollTop})})
+	useWindowEvent('scroll', ()=>{setScroll( window ? {x: window.pageXOffset, y: window.pageYOffset} : {x: document.documentElement.scrollLeft, y: document.documentElement.scrollTop})})
 
 	const scrollTo = ({ x, y }: ScrollToParams) => {
 		if (x !== undefined && y !== undefined) {
 		  window.scrollTo(x, y);
-		} else if (x !== undefined) {
+		} else if (x !== undefined && window) {
 		  window.scrollTo(x, window.scrollY);
-		} else if (y !== undefined) {
+		} else if (y !== undefined && window) {
 		  window.scrollTo(window.scrollX, y);
 		}
 	  };
